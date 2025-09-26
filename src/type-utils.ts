@@ -1,5 +1,5 @@
-import {EvmChain, SolanaChain, SupportedChain} from './chains.js'
-import {EvmAddress, SolanaAddress} from './domains/index.js'
+import {EvmChain, SolanaChain, CosmosChain, SupportedChain} from './chains.js'
+import {EvmAddress, SolanaAddress, OsmosisAddress} from './domains/index.js'
 
 export type TupleToUnion<ArrayType> = ArrayType extends readonly unknown[]
     ? ArrayType[number]
@@ -10,7 +10,9 @@ export type AddressForChain<Chain extends SupportedChain> =
         ? EvmAddress
         : Chain extends SolanaChain
           ? SolanaAddress
-          : never
+          : Chain extends CosmosChain
+            ? OsmosisAddress
+            : never
 
 export type FixedLengthArray<
     T,

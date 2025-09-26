@@ -1,7 +1,8 @@
 import {EvmAddress} from './evm-address.js'
 import {SolanaAddress} from './solana-address.js'
+import {OsmosisAddress} from './osmosis-address.js'
 import {AddressComplement} from './address-complement.js'
-import {isEvm, SupportedChain} from '../../chains.js'
+import {isEvm, isCosmos, SupportedChain} from '../../chains.js'
 import {AddressForChain} from '../../type-utils.js'
 
 export function createAddress<Chain extends SupportedChain>(
@@ -12,6 +13,10 @@ export function createAddress<Chain extends SupportedChain>(
 ): AddressForChain<Chain> {
     if (isEvm(chainId)) {
         return EvmAddress.fromUnknown(address) as AddressForChain<Chain>
+    }
+
+    if (isCosmos(chainId)) {
+        return OsmosisAddress.fromUnknown(address) as AddressForChain<Chain>
     }
 
     if (complement) {
