@@ -39,7 +39,8 @@ import {
     PaginationRequest
 } from '../api/index.js'
 import {EvmCrossChainOrder} from '../cross-chain-order/evm/index.js'
-import {isEvm, NetworkEnum, SupportedChain} from '../chains.js'
+import {OsmosisCrossChainOrder} from '../cross-chain-order/osmosis/index.js'
+import {isEvm, isCosmos, NetworkEnum, SupportedChain} from '../chains.js'
 
 export class SDK {
     public readonly api: FusionApi
@@ -362,5 +363,25 @@ export class SDK {
             preset: params.preset,
             takingFeeReceiver: params.fee?.takingFeeReceiver
         })
+    }
+
+    /**
+     * Announce Osmosis order to relayer
+     * Required for Osmosis orders before on-chain creation
+     */
+    public async announceOsmosisOrder(
+        order: OsmosisCrossChainOrder,
+        quoteId: string,
+        secretHashes: string[]
+    ): Promise<string> {
+        if (!order.multipleFillsAllowed && secretHashes.length > 1) {
+            throw new Error(
+                'with disabled multiple fills you provided secretHashes > 1'
+            )
+        }
+
+        // For now, return the order hash
+        // Full relayer integration will be added in future commits
+        return order.getOrderHash(NetworkEnum.OSMOSIS_TESTNET)
     }
 }
